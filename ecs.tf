@@ -19,24 +19,14 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = "my-ecs-cluster"
 }
 
-# IAM Role for ECS
-resource "aws_iam_role" "ecs_task_execution_role1" {
-  name = "ecsTaskExecutionRole-dashath"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow",
-      Principal = {
-        Service = "ecs-tasks.amazonaws.com"
-      },
-      Action = "sts:AssumeRole"
-    }]
-  })
+# IAM Role for ECS - Use existing role if it exists
+data "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
 }
 
 resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
   name       = "ecs-task-execution-policy"
-  roles      = [aws_iam_role.ecs_task_execution_role1.name]
+  roles      = [data.aws_iam_role.ecs_task_execution_role.name]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
@@ -45,7 +35,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
   family                   = "my-task"
   requires_compatibilities = ["EC2"]
   network_mode             = "bridge"
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role1.arn
+  execution_role_arn       = data.aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
       name  = "my-container",
