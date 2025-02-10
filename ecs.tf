@@ -45,7 +45,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
   family                   = "my-task"
   requires_compatibilities = ["EC2"]
   network_mode             = "bridge"
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role1.arn
   container_definitions = jsonencode([
     {
       name  = "my-container",
