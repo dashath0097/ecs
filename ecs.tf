@@ -20,7 +20,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 # IAM Role for ECS
-resource "aws_iam_role" "ecs_task_execution_role" {
+resource "aws_iam_role" "ecs_task_execution_role1" {
   name = "ecsTaskExecutionRole-dashath"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -36,7 +36,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 
 resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
   name       = "ecs-task-execution-policy"
-  roles      = [aws_iam_role.ecs_task_execution_role.name]
+  roles      = [aws_iam_role.ecs_task_execution_role1.name]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
